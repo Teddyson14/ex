@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Система учета складов{% endblock %}</title>
+    
+    <!-- Подключаем современный шрифт для интерфейсов -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-main: #f8fafc;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --nav-bg: #1e293b;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Шапка сайта */
+        .navbar {
+            background-color: var(--nav-bg);
+            color: #ffffff;
+            padding: 14px 24px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .navbar-brand span {
+            color: #38bdf8; /* Голубой акцент на логотипе */
+        }
+
+        .navbar-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .navbar-link {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .navbar-link:hover {
+            color: #ffffff;
+        }
+
+        /* Индикатор сессии пользователя */
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-left: 20px;
+            border-left: 1px solid #334155;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background-color: #475569;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #f1f5f9;
+        }
+
+        .btn-logout {
+            background-color: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-logout:hover {
+            background-color: #ef4444;
+            color: #ffffff;
+        }
+
+        /* Основной конвеер для контента */
+        .main-content {
+            flex: 1;
+            padding: 30px 0;
+            box-sizing: border-box;
+        }
+
+        /* Адаптивность для мобильных экранов */
+        @media (max-width: 768px) {
+            .navbar-container {
+                flex-direction: column;
+                gap: 14px;
+                text-align: center;
+            }
+            .navbar-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 12px;
+            }
+            .user-profile {
+                border-left: none;
+                padding-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Навигационная панель -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <h2>Добро пожаловать, {{ session.get('user_fio') }}!</h2>
+            
+            <div class="navbar-menu">
+                    <a href="/logout" class="navbar-link" style="color: #38bdf8; font-size: 25px;">Выйти</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Основное тело страницы -->
+    <main class="main-content">
+        {# Сюда будет внедряться блок из файла каталога #}
+        {% block content %}
+            {# Универсальный перехватчик для обоих типов блоков #}
+        {% endblock %}
+    </main>
+
+</body>
+</html>

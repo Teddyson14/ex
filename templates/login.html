@@ -1,0 +1,167 @@
+<style>
+    .login-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 80vh;
+        font-family: system-ui, -apple-system, sans-serif;
+        background-color: #f8fafc; /* Мягкий светлый фон в тон каталога */
+    }
+
+    .login-container {
+        width: 100%;
+        max-width: 420px;
+        padding: 40px 35px;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        border: 1px solid #e2e8f0;
+    }
+
+    .login-container h1 {
+        text-align: center;
+        margin-bottom: 24px;
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #1e293b; /* Фирменный цвет шапки таблицы */
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #4a5568;
+    }
+
+    /* Современная стилизация полей ввода */
+    .form-control-custom {
+        width: 100%;
+        padding: 10px 14px;
+        font-size: 0.95rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        background-color: #fff;
+        color: #1e293b;
+        transition: all 0.2s ease;
+        box-sizing: border-box;
+    }
+
+    .form-control-custom:focus {
+        outline: none;
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+    }
+
+    /* Кнопки управления */
+    .button-group-custom {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 28px;
+    }
+
+    .btn-submit {
+        width: 100%;
+        padding: 12px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-align: center;
+    }
+
+    .btn-primary-custom {
+        background-color: #1e293b; /* В тон стиля каталога */
+        color: #ffffff;
+    }
+
+    .btn-primary-custom:hover {
+        background-color: #0f172a;
+    }
+
+    .btn-secondary-custom {
+        background-color: #f1f5f9;
+        color: #475569;
+        border: 1px solid #e2e8f0;
+    }
+
+    .btn-secondary-custom:hover {
+        background-color: #e2e8f0;
+        color: #1e293b;
+    }
+
+    /* Красивые кастомные уведомления об ошибках */
+    .alert-custom {
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .alert-danger-custom {
+        background-color: #fef2f2;
+        border: 1px solid #fca5a5;
+        color: #991b1b;
+    }
+    .alert-success-custom {
+        background-color: #f0fdf4;
+        border: 1px solid #86efac;
+        color: #166534;
+    }
+    .btn-close-custom {
+        background: none;
+        border: none;
+        font-size: 1.1rem;
+        cursor: pointer;
+        color: inherit;
+        opacity: 0.7;
+        line-height: 1;
+    }
+    .btn-close-custom:hover {
+        opacity: 1;
+    }
+</style>
+
+<div class="login-wrapper">
+    <div class="login-container">
+        <h1>Вход в систему</h1>
+
+        {# Всплывающие сообщения (Flash-оповещения) #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert-custom alert-{{ category }}-custom" role="alert">
+                        <span>{{ message }}</span>
+                        <button type="button" class="btn-close-custom" onclick="this.parentElement.remove();">&times;</button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="/auth">
+            <div class="form-group">
+                <label for="login-input" class="form-label">Логин</label>
+                <input type="text" id="login-input" name="login" class="form-control-custom" autocomplete="username">
+            </div>
+
+            <div class="form-group">
+                <label for="pass-input" class="form-label">Пароль</label>
+                <input type="password" id="pass-input" name="password" class="form-control-custom" autocomplete="current-password">
+            </div>
+
+            <div class="button-group-custom">
+                <button type="submit" class="btn-submit btn-primary-custom">Войти</button>
+                <button type="submit" name="guest_mode" value="1" class="btn-submit btn-secondary-custom">Войти как гость</button>
+            </div>
+        </form>
+    </div>
+</div>
