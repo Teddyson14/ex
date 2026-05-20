@@ -4,6 +4,8 @@ from database import db
 
 from model import Users, Products
 
+//pip install Flask Flask-SQLAlchemy
+
 
 
 app = Flask(__name__)
