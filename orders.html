@@ -73,3 +73,29 @@
 
 </body>
 </html>
+
+from datetime import datetime
+
+@app.route('/orders')
+def view_orders():
+    # Делаем запрос, левым соединением (outerjoin) подтягивая пункт выдачи и пользователя,
+    # чтобы не было ошибок, если какого-то пользователя удалили
+    orders_list = db.session.query(Orders).outerjoin(Points).outerjoin(Users).all()
+    
+    return render_template('orders.html', orders=orders_list)
+
+
+class Orders(db.Model):
+    # ... ваши поля ...
+    
+    # ДОБАВИТЬ СЮДА: связывает заказ с пользователем и пунктом выдачи
+    user = db.relationship('Users', backref='orders')
+    point = db.relationship('Points', backref='orders')
+    # связывает заказ с промежуточной таблицей товаров
+    order_products = db.relationship('OrderProducts', backref='order', cascade='all, delete-orphan')
+
+class OrderProducts(db.Model):
+    # ... ваши поля ...
+    
+    # ДОБАВИТЬ СЮДА: связывает строку заказа с конкретным товаром
+    product = db.relationship('Products', backref='order_items')
