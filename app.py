@@ -4,9 +4,9 @@ from database import db
 
 from model import Users, Products
 
-//pip install Flask Flask-SQLAlchemy
-
-
+# python -m venv env
+# env\Scripts\Activate.ps1
+# pip install Flask Flask-SQLAlchemy
 
 app = Flask(__name__)
 
