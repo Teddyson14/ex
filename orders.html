@@ -2,54 +2,72 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Список заказов</title>
+    <title>Панель заказов</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 30px; background-color: #f4f6f9; }
-        h1 { color: #333; }
-        .back-link { display: inline-block; margin-bottom: 20px; color: #007bff; text-decoration: none; }
-        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background-color: #007bff; color: white; }
-        tr:hover { background-color: #f1f5f9; }
-        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; background-color: #ffeeba; color: #856404; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 30px; background-color: #f8f9fa; color: #333; }
+        .back-btn { display: inline-block; margin-bottom: 20px; color: #007bff; text-decoration: none; font-weight: 500; }
+        .back-btn:hover { text-decoration: underline; }
+        h1 { margin-bottom: 25px; font-size: 28px; }
+        table { width: 100%; border-collapse: collapse; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; }
+        th, td { padding: 14px 18px; text-align: left; border-bottom: 1px solid #eaeaea; }
+        th { background-color: #343a40; color: #fff; font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; }
+        tr:hover { background-color: #fdfdfd; }
+        .product-list { margin: 0; padding-left: 20px; font-size: 14px; color: #555; }
+        .code-badge { background-color: #e9ecef; padding: 3px 8px; border-radius: 4px; font-family: monospace; font-size: 14px; color: #495057; font-weight: bold; }
+        .status-badge { display: inline-block; padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; background-color: #ffeeba; color: #856404; }
     </style>
 </head>
 <body>
 
-    <a href="{{ url_for('main') }}" class="back-link">← Вернуться к товарам</a>
+    <a href="{{ url_for('main') }}" class="back-btn">← На главную к товарам</a>
     
-    <h1>Управление заказами</h1>
+    <h1>Все заказы системы</h1>
 
     {% if orders %}
         <table>
             <thead>
                 <tr>
                     <th>№ Заказа</th>
-                    <th>Дата</th>
-                    <th>Товар</th>
-                    <th>Артикул</th>
-                    <th>Кол-во</th>
-                    <th>Телефон клиента</th>
+                    <th>Дата создания</th>
+                    <th>Дата окончания</th>
+                    <th>Пункт выдачи</th>
+                    <th>Клиент (ФИО)</th>
+                    <th>Состав заказа (Товары)</th>
+                    <th>Код получения</th>
                     <th>Статус</th>
                 </tr>
             </thead>
             <tbody>
                 {% for order in orders %}
                 <tr>
-                    <td><strong>{{ order.id }}</strong></td>
-                    <td>{{ order.order_date.strftime('%d.%m.%Y %H:%M') }}</td>
-                    <td>{{ order.product.name if order.product else 'Товар удален' }}</td>
-                    <td><code>{{ order.product_article }}</code></td>
-                    <td>{{ order.quantity }} {{ order.product.unit if order.product else 'шт.' }}</td>
-                    <td>{{ order.customer_phone or '—' }}</td>
+                    <td><strong>#{{ order.id }}</strong></td>
+                    <!-- Безопасный вывод даты через встроенный фильтр Jinja2 -->
+                    <td>{{ order.date_create.strftime('%d.%m.%Y %H:%M') if order.date_create else '—' }}</td>
+                    <td>{{ order.date_end.strftime('%d.%m.%Y') if order.date_end else '—' }}</td>
+                    <td>{{ order.point.address if order.point else 'Пункт не найден (ID: ' ~ order.point_id ~ ')' }}</td>
+                    <td>{{ order.user.fio if order.user else 'Гость (ID: ' ~ order.user_id ~ ')' }}</td>
+                    <td>
+                        <ul class="product-list">
+                            <!-- Пробегаемся по связанной таблице OrderProducts -->
+                            {% for item in order.order_products %}
+                                <li>
+                                    {{ item.product.name if item.product else 'Товар [' ~ item.product_id ~ ']' }} 
+                                    — <strong>{{ item.amount }}</strong> {{ item.product.unit if item.product else 'шт.' }}
+                                </li>
+                            {% else %}
+                                <li style="color: #999; list-style-type: none; margin-left: -20px;">Пустой заказ</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td><span class="code-badge">{{ order.recive_code }}</span></td>
                     <td><span class="status-badge">{{ order.status }}</span></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     {% else %}
-        <div style="background: white; padding: 20px; border-radius: 8px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-            <p style="color: #666; font-size: 16px;">Заказов пока нет.</p>
+        <div style="background: white; padding: 30px; border-radius: 8px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <p style="color: #777; font-size: 16px; margin: 0;">В базе данных пока нет ни одного заказа.</p>
         </div>
     {% endif %}
 
